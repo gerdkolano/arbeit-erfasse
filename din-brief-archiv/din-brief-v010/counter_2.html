@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Counter </title>
+<style>
+
+body {
+    counter-reset: section;
+}
+
+h1 {
+    counter-reset: subsection;
+}
+
+h1:before {
+    counter-increment: section;
+    content: "Section " counter(section) ". ";
+}
+
+h2:before {
+    counter-increment: subsection;
+    content: counter(section) "." counter(subsection) " ";
+}
+
+div.body {
+    counter-reset: section -100;
+}
+
+div.h1 {
+    counter-reset: subsection;
+}
+
+div.h1:before {
+    counter-increment: section;
+    content: "Section " counter(section) ". ";
+}
+
+div.h2:before {
+    counter-increment: subsection;
+    content: counter(section) "." counter(subsection) " ";
+}
+
+</style>
+</head>
+
+<body>
+
+<p><b>Note:</b> IE8 supports these properties only if a !DOCTYPE is specified.</p>
+
+<h1>HTML tutorials</h1>
+<h2>HTML Tutorial</h2>
+<h2>XHTML Tutorial</h2>
+<h2>CSS Tutorial</h2>
+
+<h1>Scripting tutorials</h1>
+<h2>JavaScript</h2>
+<h2>VBScript</h2>
+
+<h1>XML tutorials</h1>
+<h2>XML</h2>
+<h2>XSL</h2>
+
+
+<div class="body">body</div>
+<div class="h1">HTML tutorials</div>
+<div class="h2">HTML Tutorial</div>
+<div class="h2">XHTML Tutorial</div>
+<div class="h2">CSS Tutorial</div>
+
+<div class="h1">Scripting tutorials</div>
+<div class="h2">JavaScript</div>
+<div class="h2">VBScript</div>
+
+<div class="h1">XML tutorials</div>
+<div class="h2">XML</div>
+<div class="h2">XSL</div>
+
+</body>
+</html>
+

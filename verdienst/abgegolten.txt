@@ -1,0 +1,112 @@
+2016-05-01
+Mehrarbeit über 33.3 Std darf "abgebummelt" oder ausgezahlt werden.
+Dazu ist sie zu saldieren. Überschuss in einer Woche gleicht Defizit in einer anderen Woche aus.
+Ein solches Defizit bewirkt das "Abbummeln".
+
+Zuschlagspflichtige 25%-Mehrarbeit saldieren und ihre Auszahlung verbuchen
+Ist die Grenze 37 Std oder 33.3 Std  ?
+Sabine sagt: 37 Std
+
+2016-04-30
+
+Es muss noch der Nachtzuschlag für die Verfallszeit erfasst werden.
+Beispiel : 29.Februar 2016
+          ohne   mit
+2016-02-29 1 min 0.02 Std   0.03 Std
+           2
+           3     0.05       0.08
+           4
+           5
+           6     0.10       0.15
+
+
+
+--
+Ich unterstelle, dass eine Verkaufsstellenprämie, die im Februar ausgezahlt wird,
+Spät-, Nacht- und Mehrarbeitszuschläge aus dem Monat Januar ausgleicht.
+
+Dazu wird die (Hälfte der Verkaufsstellenprämie)
+durch den (Stundenlohn mit 4% Kassenzulage) dividiert.
+Das ergibt eine (Zeit "a" in Stunden).
+Diese (Zeit "a" in Stunden) wird von der in den vergangenen Monaten aufsaldierten (Summe aus Spät-, Nacht- und Mehrarbeitszuschlägen) subtrahiert.
+Das ergibt einen (Übertrag in Stunden).
+Wenn dieser (Übertrag in Stunden) negativ ist, wird er auf Null gesetzt.
+Dieser (Übertrag in Stunden) ist der Vortrag für den nächsten Monat.
+
+
+3 Spalten von der Verdienstabrechnung in der table verdienst:
+verdienst.zt770 bedeutet Zeit mit    'Nachtzuschlag 50%pfl.25%fr. Gehalt (JLL)'
+verdienst.sa770 bedeutet Stundenlohn 'Nachtzuschlag 50%pfl.25%fr. Gehalt (JLL)'
+verdienst.la770 bedeutet Lohnart_770 'Nachtzuschlag 50%pfl.25%fr. Gehalt (JLL)'
+
+verdienst.zt357 bedeutet Zeit mit    '20% Zuschlag Spätöffnung (JLL)'
+verdienst.zt307 bedeutet Zeit mit    '25% Mehrarbeit f. Angest. (JLL)'
+verdienst.zt305 bedeutet Zeit mit    'Mehrarbeit (JLL)'
+
+Verstehe Zusammenhänge ininerhalb der table `verdienst`
+            50% der Zeit `verdienst.zt770` multipliziert mit dem Stundenlohn `verdienst.sa770` liefert den Zahlbetrag `verdienst.la770`
+2015-07-01  50% der Zeit   468 h           multipliziert mit dem Stundenlohn  1455 €/h         liefert den Zahlbetrag   3405 €        
+2016-03-01  50% der Zeit  2238 h           multipliziert mit dem Stundenlohn  1491 €/h         liefert den Zahlbetrag  16685 €        
+           
+           100% der Zeit `verdienst.zt307` multipliziert mit dem Stundenlohn `verdienst.sa307` liefert den Zahlbetrag `verdienst.la307`
+2016-03-01 100% der Zeit   232 h           multipliziert mit dem Stundenlohn   388 €/h         liefert den Zahlbetrag    900 €
+                                                              25% von 1551 ist 388
+           
+            x % der Zeit `verdienst.zt357` multipliziert mit dem Stundenlohn `verdienst.sa357` liefert den Zahlbetrag `verdienst.la357`
+2015-07-01 100% der Zeit   468 h           multipliziert mit dem Stundenlohn  1513 €/h         liefert den Zahlbetrag   7081 € 
+2016-03-01  20% der Zeit  5470 h           multipliziert mit dem Stundenlohn  1551 €/h         liefert den Zahlbetrag  16968 €
+
+              % der Zeit `verdienst.zt305` multipliziert mit dem Stundenlohn `verdienst.sa305` liefert den Zahlbetrag `verdienst.la305`
+2015-01-01 100% der Zeit  4386 h           multipliziert mit dem Stundenlohn  1689 €/h         liefert den Zahlbetrag  74080 €
+2015-07-01 100% der Zeit   823 h           multipliziert mit dem Stundenlohn  1513 €/h         liefert den Zahlbetrag  12452 €
+
+Verstehe Zusammenhänge zwischen table `zeiten` und table `verdienst`
+Vergleiche table `zeiten` mit table `verdienst`
+                      verdienst.zt770 / 200 = zeiten.nachtzuschlag_50 zeiten.spaetzuschlag_20 zeiten.ang_zuschlag_25
+2015-01-04                                     1.42                    2.00
+                                                                                                                                       Phantasievolle Erzeugung
+                                                                                                                                       geeigneter Werte
+                                                                                                                                       für den Vortrag
+                      table `verdienst`       table `zeiten`         
+2015-07-05 2015-07-01  468            / 100 =  4.68
+2015-07-05 2015-07-01  468            / 200 =  2.34
+2016-03-06 2016-03-01 2238            / 200 = 11.19
+2016-03-06 2016-03-01 5470            / 500 = 10.94
+2016-03-06 2016-03-01  232            / 400 =  0.58
+
+mysql> select datum_auto, datum, spaetzuschlag_20, nachtzuschlag_50, ang_zuschlag_25, spaetzuschlag_20+nachtzuschlag_50+ang_zuschlag_25 as ZuschlSaldo from zeiten  where not spaetzuschlag_20 is null order by datum_auto;
++------------+-------+------------------+------------------+-----------------+-------------+
+| datum_auto | datum | spaetzuschlag_20 | nachtzuschlag_50 | ang_zuschlag_25 | ZuschlSaldo |
++------------+-------+------------------+------------------+-----------------+-------------+
+| 2015-01-04 | NULL  |             2.00 |             1.42 |            0.00 |        3.42 |
+| 2015-07-05 | NULL  |             4.68 |             2.34 |            8.23 |       15.25 |
+| 2016-03-06 | NULL  |            10.94 |            11.19 |            0.58 |       22.71 |
++------------+-------+------------------+------------------+-----------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select datum, round(la300/144) as std, round(la300/144*1.04) as std, round(la422/2/(round(la300/14400*1.04))) as abgegolten, zt305, sa305, la305, round( zt305 * sa305 / 100) as l, zt307, sa307, la307, round( zt307 * sa307 / 100) as l, zt357, sa357, la357, round( zt357 * sa357 / 500) as l, zt770, sa770, la770, ceil( zt770 * sa770 / 200) as l from verdienst order by datum;
++-----------+-----+-----+-----------+------+------+------+------+------+------+------+-----+------+------+------+------+------+------+------+------+
+|datum      |std  |std  |abgegolten |zt305 |sa305 |la305 |l     |zt307 |sa307 |la307 |l    |zt357 |sa357 |la357 |l     |zt770 |sa770 |la770 |l     |
++-----------+-----+-----+-----------+------+------+------+------+------+------+------+-----+------+------+------+------+------+------+------+------+
+|2015-01-01 |1455 |1513 |       844 | 4386 | 1689 |74080 |74080 | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-02-01 |1455 |1513 |       694 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-03-01 |1455 |1513 |       656 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-03-02 |1455 |1513 |      NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-04-01 |1455 |1513 |       790 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-04-02 |1455 |1513 |       790 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-05-01 |1455 |1513 |       814 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-05-02 |1455 |1513 |       814 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-06-01 |1455 |1513 |       548 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-07-01 |1455 |1513 |       614 |  823 | 1513 |12452 |12452 | NULL | NULL | NULL |NULL |  468 | 1513 | 7081 | 1416 |  468 | 1455 | 3405 | 3405 |
+|2015-08-01 |1455 |1513 |       671 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-09-01 |1455 |1513 |       571 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-10-01 |1491 |1551 |       511 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-11-01 |1491 |1551 |       521 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-12-01 |1491 |1551 |       644 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2015-12-02 |1491 |1551 |       644 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2016-01-01 |1491 |1551 |       694 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2016-02-01 |1491 |1551 |       626 | NULL | NULL | NULL | NULL | NULL | NULL | NULL |NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+|2016-03-01 |1491 |1551 |       568 | NULL | NULL | NULL | NULL |  232 |  388 |  900 | 900 | 5470 | 1551 |16968 |16968 | 2238 | 1491 |16685 |16685 |
++-----------+-----+-----+-----------+------+------+------+------+------+------+------+-----+------+------+------+------+------+------+------+------+
+19 rows in set (0.00 sec)
+

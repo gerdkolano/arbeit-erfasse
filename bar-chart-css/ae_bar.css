@@ -1,0 +1,13 @@
+table.chart tr.barvrow td 
+{ 
+	width: 40px;
+	height: 400px; 
+	vertical-align: bottom;
+	border-bottom-color: red;
+	border-bottom-style: solid;
+	text-align: center; 
+} 
+table.chart tr.bartrow td 
+{ 
+	text-align: center 
+} 

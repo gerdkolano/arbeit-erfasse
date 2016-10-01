@@ -1,0 +1,58 @@
+Zuletzt aktualisiert: So 2016-04-10 17:32:32
+
+am 9.1.2015 habe ich die Bezahlung von 43.86 Stunden Mehrarbeit,
+ die ich vom 29.9.204 bis zum 3.1.2015 geleistet hatte,
+ gefordert.
+
+Das hat Aldi laut Verdienstnachweis Ende Januar 2015 bezahlt.
+ Also ist das Zeitkonto am 4.Januar 2015 ausgeglichen.
+ Setze ist, 20su und 50su auf 0.
+
+Welche Zeiten sind bei Teilzeitarbet "Mehrarbeit" im Sinne des Manteltarifvertrags
+ und mit 25% Zuschlag zu vergüten?
+
+Das gfos 4.7plus Zeitkonto lässt nicht erkennen,
+ ob eine Überziehung der arbeitszeit autorisiert wurde.
+ Das Zeiterfassungsgerät zeigt am nächsten Arbeitstag auf seinem Bildschirmchen
+ die arbeitszeit einschließlich der autorisierten Überziehung an.
+
+Die mir von Ihnen überlassenen Zeitkonto-Auszüge weisen gelegentlich Betriebsrats-Sitzungszeiten
+ von 6.66 Stunden aus.
+ Das ist meistens falsch.
+
+Ebenso werden mir gelegentlich 5.7 Stunden je Urlaubstag gutgeschrieben.
+ Das ist falsch, es dürften nur 5.55 Stunden sein.
+
+Für Feiertage werden von ALDI manchmal 5.54 Stunden angerechnet.
+ Es müssten 5.55 Stunden sein.
+
+Werden Spät-, Nacht- und Mehrarbeitszuschläge
+ bei Krankheit gezahlt wie geplant?
+
+2015-06-23 BA 6.66h geändert
+2015-06-02 BA 6.66h geändert
+2015-07-25 15.00 ist falsch
+2015-09-22 BR 6.66h geändert
+2015-10-06 BR 6.66h geändert
+2015-08-31 bis 2015-09-19 Urlaub von 5.70h auf 5.55h geändert
+
+
+Das gfos 4.7plus Zeitkonto November endet mit einem "Saldo kum" von 19.88h
+
+Dezember beginnt mit einem "Saldo kum" von 17.09h
+
+Das ist 2.79h weniger.
+
+
+Von mir verursachte und korrigierte Irrtümer :
+
+2015-03-03 BA dauert 2.42h , nicht wie in ZA 2.25h
+2015-04-23 Pause bis 10.52 auf 10.42 geändert. Irrtum ?
+2015-05-06 Ist die vorzeitige Arbeitsaufnahme autorisiert worden ?
+2015-05-21 Fange um 9.54 an
+2015-05-21 Planung war 10.00, autorisiert wird 9.57.
+
+Version von 2015-06-23
+
+:s/Version/\=strftime("Version %Y-%m-%d-%H.%M.%S")/
+
