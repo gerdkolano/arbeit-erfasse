@@ -5,6 +5,7 @@ git add .
 git add include/configure.php # Note: even modified files must be "added"
 git ls-files
 git config --global user.name gerdkolano # write to global ~/.gitconfig
+git commit -m "Kommentar"
 git push origin master
 https://github.com/
 Im Browser 
