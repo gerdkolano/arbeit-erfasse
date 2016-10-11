@@ -1,5 +1,6 @@
 <?php
-require_once( "konstante.php");
+require_once( "../include/konst.php");
+require_once( "../include/datum.php");
 require_once( "helfer.php");
 require_once( "tabelle.php");
 require_once( "parser.php");
@@ -92,23 +93,41 @@ function form_update( $spalte, $arg) {
     $erg .= table_row( $inhalt, $column, $vorhanden);
   }
   $erg .= row_button( "UPDATE", "id-id" . $arg["id"], "Diesen Datensatz " . $arg["id"] . "  speichern");
-  $actionskript = (new konstante)->speicher_skript;
+  $actionskript = konst::$speicher_skript;
   $erg = "<table class=\"update\">\n$erg</table>";
   return sprintf( "<form method=\"POST\" action=\"%s\">\n%s\n</form>\n", $actionskript, $erg);
 }
 
-function form_insert( $spalte, $ein_datum) {
+function form_insert( $spalte, $ein_datum, $tafelart) {
 
   $erg = form_kopf( "INSERT", "Diesen neuen Datensatz speichern");
 
+  $tarifliche_arbeitszeit = 37.0;
+  $beschäftigungsumfang   = $tarifliche_arbeitszeit * 90.0 / 100.0;
+  $tägliche_arbeitszeit   = $beschäftigungsumfang / 6 ;
+
+  switch ($tafelart) {
+  default                   : $erscheine = ""         ; $bezahlte_zeit = ""                    ; break;
+  case konst::$art_planung  : $erscheine = "plan"     ; $bezahlte_zeit = ""                    ; break;
+  case konst::$art_feiertag : $erscheine = "Feiertag" ; $bezahlte_zeit = $tägliche_arbeitszeit ; break;
+  case konst::$art_urlaub   : $erscheine = "Urlaub"   ; $bezahlte_zeit = $tägliche_arbeitszeit ; break;
+  case konst::$art_frei     : $erscheine = "frei"     ; $bezahlte_zeit = ""                    ; break;
+  }
   foreach ($spalte as $column => $inhalt) {
-    $vorhanden = ($column == "datum" or $column == "i_saldo_datum") ? $ein_datum : ""; // zeige das Datum als Vorgabe
+    switch ($column) {
+    default                   : $vorhanden = ""             ; break;
+    case "erscheine"          : $vorhanden = $erscheine     ; break;
+    case "arbzeit_plan_dauer" : $vorhanden = $bezahlte_zeit ; break;
+    case "datum"              : $vorhanden = $ein_datum     ; break;
+    case "i_saldo_datum"      : $vorhanden = $ein_datum     ; break;
+    }
+#   $vorhanden = ($column == "datum" or $column == "i_saldo_datum") ? $ein_datum : ""; // zeige das Datum als Vorgabe
     $erg .= table_row( $inhalt, $column, $vorhanden);
   }
 
   $erg .= row_button( "INSERT", "gesandt-b", "Diesen neuen Datensatz speichern");
   //$erg .= "  <tr><td><button type=\"SUBMIT\" name=\"$submit_name\" value=\"$submit_inhalt\"> $submit_label </button>\n";
-  $actionskript = (new konstante)->speicher_skript;
+  $actionskript = konst::$speicher_skript;
   $erg = "<table class=\"insert\">\n$erg</table>";
   return sprintf( "<form method=\"POST\" action=\"%s\">\n%s\n</form>\n", $actionskript, $erg);
 }
@@ -128,10 +147,9 @@ function verarbeite_id_datum_art( $eine_id, $ein_datum, $tafelart) {
 }
 
 function erzeuge_ein_formular( $where, $ein_datum, $tafelart) {
-  $konst = new konstante;
   printf( "E060 where=\"%s\", ein_datum=\"%s\", tafelart=\"%s\"<br />\n", $where, $ein_datum, $tafelart);
-  $table_name = $konst->table_name;
-  $database_name = $konst->database_name;
+  $table_name = konst::$table_name;
+  $database_name = konst::$database_name;
 
   // Ist zu diesem Datum oder dieser Id in "where" ein Datensatz vorhanden ?
   $query = "SELECT id, datum_auto FROM $table_name $where";
@@ -139,26 +157,53 @@ function erzeuge_ein_formular( $where, $ein_datum, $tafelart) {
   $erg = $conn->frage( 0, "USE $database_name");
   $schon_da = $conn->hol_array_of_objects( "$query", 0); // todo Fehlerbehandlung
   if ($schon_da) {                                                                                    // UPDATE
+    $deutsch = (new datum_objekt( $schon_da[0]["datum_auto"]))->deutsch( "EEEE, d. MMMM YYYY");
     printf("U010 Editiere id=\"%s\", datum=\"%s\"<br />\n", $schon_da[0]["id"], $schon_da[0]["datum_auto"]);
   } else {                                                                                       // INSERT
+    $deutsch = $ein_datum == "" ? "" : (new datum_objekt( $ein_datum))->deutsch( "EEEE, d. MMMM YYYY");
     printf("U020 Erzeuge mit datum=\"%s\", where=\"%s\" . Noch nicht im Datenbestand.<br />\n", $ein_datum, $where);
   }
+  printf( "<strong>%s</strong><br />\n", $deutsch);
   switch ($tafelart) {
-  case $konst->art_kurz :
+  case konst::$art_planung :
+    $tabelle = new tabelle;
+    $spalte = $tabelle->planungsfelder;
+    $comma_separated = implode(",", $tabelle->planungswahl);
+    $query = "SELECT $comma_separated  FROM $table_name $where";
+    break;
+  case konst::$art_feiertag :
+    $tabelle = new tabelle;
+    $spalte = $tabelle->feiertagsfelder;
+    $comma_separated = implode(",", $tabelle->feiertagswahl);
+    $query = "SELECT $comma_separated  FROM $table_name $where";
+    break;
+  case konst::$art_urlaub :
+    $tabelle = new tabelle;
+    $spalte = $tabelle->urlaubsfelder;
+    $comma_separated = implode(",", $tabelle->urlaubswahl);
+    $query = "SELECT $comma_separated  FROM $table_name $where";
+    break;
+  case konst::$art_frei :
+    $tabelle = new tabelle;
+    $spalte = $tabelle->freifelder;
+    $comma_separated = implode(",", $tabelle->freiwahl);
+    $query = "SELECT $comma_separated  FROM $table_name $where";
+    break;
+  case konst::$art_kurz :
     $tabelle = new tabelle;
     $spalte = $tabelle->kurzfelder;
     $comma_separated = implode(",", $tabelle->kurzwahl);
     $query = "SELECT $comma_separated  FROM $table_name $where";
     break;
-  case $konst->art_mini :
+  case konst::$art_mini :
     $tabelle = new tabelle;
     $spalte = $tabelle->minifelder;
     $comma_separated = implode(",", $tabelle->miniwahl);
     $query = "SELECT $comma_separated  FROM $table_name $where";
     break;
-  case $konst->art_lang :
+  case konst::$art_lang :
   default            :
-    $spalte = (new tabelle())->felder;
+    $spalte = (new tabelle())->felder; # Was ist der Unterschied zwischen "new tabelle" und "new tabelle()" ?
     $query = "SELECT * FROM $table_name $where";
     break;
   }
@@ -166,7 +211,7 @@ function erzeuge_ein_formular( $where, $ein_datum, $tafelart) {
     $erg = $conn->hol_array_of_objects( "$query", 0); // todo Fehlerbehandlung
     printf( "%s", form_update( $spalte, $erg[0]));
   } else {                                                                                       // INSERT
-    printf( "%s", form_insert( $spalte, $ein_datum));
+    printf( "%s", form_insert( $spalte, $ein_datum, $tafelart));
   }
   return;
 }

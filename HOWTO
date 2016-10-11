@@ -1,0 +1,12 @@
+man git-add
+git rm --cached -r archiv/
+git rm --cached datenbank-arbeit-zeiten-20*
+git add .
+git add include/configure.php # Note: even modified files must be "added"
+git ls-files
+git config --global user.name gerdkolano # write to global ~/.gitconfig
+git push origin master
+https://github.com/
+Im Browser 
+https://github.com/
+https://github.com/gerdkolano/arbeit-erfasse.git

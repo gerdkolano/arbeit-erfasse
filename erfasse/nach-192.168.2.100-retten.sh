@@ -14,7 +14,7 @@ INSERT ${TABLE_NAME}_$DATUM SELECT * FROM $TABLE_NAME;
 
 mysqldump  -hzoe.xeo -uhanno -p$parole $DATABASE_NAME > /daten/srv/www/htdocs/arbeit/$DUMPDATEI
 echo  'create database if not exists $DATABASE_NAME ;' | mysql -h $host -u hanno -p$parole
-mysql -h $host -u hanno -p$parole $DATABASE_NAME < /daten/srv/www/htdocs/arbeit/$DUMPDATEI # Die Alte wird gelöscht
+mysql -h $host -u hanno -p$parole $DATABASE_NAME < /daten/srv/www/htdocs/arbeit/$DUMPDATEI
 
 echo "rsync -n -auv --delete --exclude '*~' --exclude '.??*' /daten/srv/www/htdocs/arbeit/ /fadi/daten/srv/www/htdocs/arbeit/"
 echo 'for i in `find /daten/srv/www/htdocs/arbeit/ -name logging` ; do :> $i; done'
@@ -34,7 +34,6 @@ exit 0
 
 2016-10-02
 
-hanno@zoe:~$ pushd /daten/srv/www/htdocs/arbeit
 hanno@zoe:/daten/srv/www/htdocs/arbeit$ git rm -r archiv/
 hanno@zoe:/daten/srv/www/htdocs/arbeit$ git rm -r din-brief-archiv/
 hanno@zoe:/daten/srv/www/htdocs/arbeit$ git rm --cached kalender/logging

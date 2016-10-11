@@ -24,7 +24,7 @@ class abgegolten {
   private $mysqli;
   private $datum;
 
-  function __construct( datum_objekt $datum, $host = "zoe.xeo") {
+  function __construct( datum_objekt $datum, $host) {
     $this->mysqli = $this->verbinde( $host);
     $this->datum = $datum->erster_tag_des_monats();
   }
@@ -34,9 +34,9 @@ class abgegolten {
   }
 
   public function verbinde( $host) {
-    $mysqli = new mysqli("zoe.xeo", "hanno", (new konst)->parole, "arbeit");
+    $mysqli = new mysqli( konst::$host_name, "hanno", (new konst)->parole, "arbeit");
     if ($mysqli->connect_errno) {
-      echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+      echo "A010 Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     }
     return $mysqli;
   }

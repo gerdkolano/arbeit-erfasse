@@ -674,7 +674,7 @@ class salden  {
       );
     }
 
-    $abgegolten = (new abgegolten( $welche_woche))->abgegolten()    ; // $welche_woche ist hier der Montag der letzen von 5 Wochen
+    $abgegolten = (new abgegolten( $welche_woche, konst::$host_name))->abgegolten()    ; // $welche_woche ist hier der Montag der letzen von 5 Wochen
     $prämie_in_std                   = $abgegolten->abgegoltene_zeit      ;
     $verkaufsstellenprämie_txt       = $abgegolten->verkaufsstellenprämie ;
     $stundenlohn                     = $abgegolten->stundenlohn           ;
@@ -727,7 +727,9 @@ class salden  {
     } else {
       $welche_woche = new datum_objekt();                                             // ?wann
     }
+    # printf( "s021 %s <br />\n", $welche_woche->format( 'Y-m-d'));
     $welche_woche = $welche_woche->erster_werktag_der_woche();
+    # printf( "s022 %s <br />\n", $welche_woche->format( 'Y-m-d'));
     $erg .= $this->forderung_einer_woche( $welche_woche, $rechner, true);             // Erzeuge ein leeres Formular
     $erg .= $this->forderung_einer_woche( $welche_woche, $rechner);                   // Zeige Wochenformular $welche_woche
     return $erg;
@@ -838,7 +840,7 @@ class salden  {
       }
 
       if ($monatsabschluss) {
-        $präegolten = (new abgegolten( $this->liste_aller_wochen[$erste_woche_eines_monats]->woche))->abgegolten();
+        $präegolten = (new abgegolten( $this->liste_aller_wochen[$erste_woche_eines_monats]->woche, konst::$host_name))->abgegolten();
         $abgegoltene_zeit = $abgegolten->abgegoltene_zeit;
         $verkaufsstellenprämie_txt = $abgegolten->verkaufsstellenprämie ;
         $stundenlohn               = $abgegolten->stundenlohn           ;
@@ -1827,9 +1829,9 @@ class ein_monat {
 
     }
 
-#   $abgegolten = (new abgegolten( $welche_woche))->abgegolten();
+#   $abgegolten = (new abgegolten( $welche_woche, konst::$host_name))->abgegolten();
 #   $abgegoltene_zeit = $abgegolten->abgegoltene_zeit;
-    $abgegoltene_zeit = (new abgegolten( $this->startdatum))->abgegolten()->abgegoltene_zeit;
+    $abgegoltene_zeit = (new abgegolten( $this->startdatum, konst::$host_name))->abgegolten()->abgegoltene_zeit;
     $gfos_zeile->salden->inc_bilanz_abgegolten( $abgegoltene_zeit);                            // gedeckelt durch angesammelte Zeit
 
     $gfos_zeile = new gfos_zeile( "", $gfos_zeile->salden, $this->kalkulator);

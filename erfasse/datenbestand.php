@@ -34,7 +34,7 @@ class daten_aller_tage implements IteratorAggregate {
       if ($monat != $vormonat) {
         $bilanz_mehr1 = $dieser_tag->sald0_kum + $dieser_tag->bilanz_20_gfos + $dieser_tag->bilanz_50_gfos ;
         $bilanz_mehro = $bilanz_mehr1 - $bilanz_mehr0;                               // Summe der Überschreitungen von 3330 in einer 4-5-Wochen-Periode
-        $prämie_in_std = (new abgegolten( $abgedatum))->abgegolten()->abgegoltene_zeit;
+        $prämie_in_std = (new abgegolten( $abgedatum, konst::$host_name))->abgegolten()->abgegoltene_zeit;
         $bilanz_abgegolten += $prämie_in_std;                                         //   Abbummeln reduziert anspruch
 
         if ($debug) printf( "<tr><td>%02d", $monat);

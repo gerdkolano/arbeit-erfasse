@@ -1,6 +1,6 @@
 <?php
 require_once( "gepostet.php");
-require_once( "konstante.php");
+require_once( "../include/konst.php");
 require_once( "connection.php");
 require_once( "verdiensttabelle.php");
 require_once( "parser.php");
@@ -78,8 +78,7 @@ function update_query( $table_name, $felder, $id) {
 }
 
 function wie_weiter_form( $zuletzt_bearbeitete_id) {
-  $konst = new konstante;
-  $erfasse_skript = $konst->erfasse_skript;
+  $erfasse_skript = konst::$verdienst_erfasse_skript;
   $erg = "";
   $erg .= "";
   $fn = pathinfo(__FILE__,PATHINFO_BASENAME);
@@ -91,7 +90,7 @@ function wie_weiter_form( $zuletzt_bearbeitete_id) {
   $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"kurz\"> Arbeite mit kurzem Formular SU030 </button><br />\n";
   $erg .= "<button class=\"button-c\" type=\"SUBMIT\" name=\"tafelart\" value=\"lang\"> Arbeite mit langem Formular SU040 </button><br />\n";
 
-  $erg .= "<input type=\"text\" name=\"datum\" value=\"\"                   >Datum<br />\n";
+  $erg .= "<input type=\"text\" name=\"datum\" value=\"\"                   >Datum hat Vorrang vor Id<br />\n";
   $erg .= "<input type=\"text\" name=\"id\"    value=\"$zuletzt_bearbeitete_id\">Id   <br />\n";
 
   $erg = sprintf( "<form method=\"GET\" action=\"%s\">\n%s\n</form>\n", $erfasse_skript, $erg);
@@ -141,7 +140,7 @@ function curPageName( $arg) {
 
 function angebot( $meldung) {
 # printf( "S040 %s <br />\n", $meldung);
-  $erfasse_skript = (new konstante)->erfasse_skript;
+  $erfasse_skript = konst::$verdienst_erfasse_skript;
   $parameter = sprintf( "?%s=%s",
     "id"   , "1"
   );
@@ -156,7 +155,7 @@ function angebot( $meldung) {
 }
 
 function nichts_gepostet( $conn) {
-  $erfasse_skript = (new konstante)->erfasse_skript;
+  $erfasse_skript = konst::$verdienst_erfasse_skript;
   //$erfasse_skript = "erfasse.php";
   $id    = isset($_GET["id"   ]) ? $_GET["id"   ] : false;
   $datum = isset($_GET["datum"]) ? $_GET["datum"] : false;
@@ -253,9 +252,8 @@ $gepostet = new gepostet();
 
 $conn = new conn();
 
-$konstante = new konstante();
-$database_name = $konstante->database_name;
-$table_name    = $konstante->verdienst_tafel_name   ;
+$database_name = konst::$database_name;
+$table_name    = konst::$verdienst_tafel_name   ;
 
 öffne_connection_zur_database( $database_name, $table_name, $conn);
 tu_was( $table_name, $gepostet, $conn);

@@ -1,5 +1,4 @@
 <?php
-require_once( "konstante.php");
 require_once( "../include/konst.php");
 require_once( "helfer.php");
 require_once( "tabelle.php");
@@ -7,7 +6,7 @@ require_once( "parser.php");
 require_once( "../include/datum.php");
 
 function head() {
-  $zuletzt_aktualisiert = "Erfassungsalgorithmus zuletzt aktualisiert: Sa 2016-06-11 10:12:55";
+  $zuletzt_aktualisiert = "Erfassungsalgorithmus zuletzt aktualisiert: Mo 2016-10-03 17:52:57";
   printf( "<!DOCTYPE html>\n");
   printf( "<html>\n");
   printf( "<head>\n");
@@ -99,23 +98,26 @@ function biete_ergebnis_an( datum_objekt $monat) {
     "Einen Monat: ",
     $monat->deutsch( "MMMM YYYY") // $beschriftung
   );
-  $erg .= sprintf( "<input type=\"hidden\" name=\"wann\" value=\"%s\">\n", $monat->format( "Y-m"));
+  $erg .= sprintf( "<input type=\"hidden\" name=\"wann\" value=\"%s\">\n", $monat->format( "Y-m-d"));
   $erg .= "</form>\n";
   return $erg;
 }
 
 function wie_weiter_form( $zuletzt_bearbeitete_id, datum_objekt $wann) {
-  $konst = new konstante;
-  $erfasse_skript = $konst->erfasse_skript;
+  $erfasse_skript = konst::$erfasse_skript;
   $erg = "";
   $erg .= "";
   $fn = pathinfo(__FILE__,PATHINFO_BASENAME);
   $erg .= sprintf( "<input type=\"hidden\" name=\"RUFER\" value=\"$fn\">\n");
-  $erg .= "<button class=\"button-e\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .$konst->art_mini. "\">Arbeite mit Sonntags-Formular</button><br />\n";
-  $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .$konst->art_kurz. "\">Arbeite mit kurzem Formular</button><br />\n";
-  $erg .= "<button class=\"button-c\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .$konst->art_lang. "\">Arbeite mit langem Formular</button><br />\n";
+  $erg .= "<button class=\"button-e\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_mini    . "\">Arbeite mit Sonntags-Formular</button><br />\n";
+  $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_frei    . "\">frei</button><br />\n";
+  $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_planung . "\">Planung</button><br />\n";
+  $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_feiertag. "\">Feiertag</button><br />\n";
+  $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_urlaub  . "\">Urlaub</button><br />\n";
+  $erg .= "<button class=\"button-b\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_kurz    . "\">Arbeite mit kurzem Formular</button><br />\n";
+  $erg .= "<button class=\"button-c\" type=\"SUBMIT\" name=\"tafelart\" value=\"" .konst::$art_lang    . "\">Arbeite mit langem Formular</button><br />\n";
 
-  $erg .= "<input type=\"text\" name=\"datum\" value=\"\"                   >Datum<br />\n";
+  $erg .= "<input type=\"text\" name=\"datum\" value=\"\"                   >Datum hat Vorrang vor Id<br />\n";
   $erg .= "<input type=\"text\" name=\"id\"    value=\"$zuletzt_bearbeitete_id\">Id   <br />\n";
 
   $erg = sprintf( "<form method=\"GET\" action=\"%s\">\n%s\n</form>\n", $erfasse_skript, $erg);
@@ -166,7 +168,7 @@ function curPageName( $arg) {
 
 function angebot( $meldung) {
 # printf( "S040 %s <br />\n", $meldung);
-  $erfasse_skript = (new konstante)->erfasse_skript;
+  $erfasse_skript = konst::$erfasse_skript;
   $parameter = sprintf( "?%s=%s",
     "id"   , "1"
   );
@@ -181,7 +183,7 @@ function angebot( $meldung) {
 }
 
 function nichts_gepostet( $conn) {
-  $erfasse_skript = (new konstante)->erfasse_skript;
+  $erfasse_skript = konst::$erfasse_skript;
   //$erfasse_skript = "erfasse.php";
   $id    = isset($_GET["id"   ]) ? $_GET["id"   ] : false;
   $datum = isset($_GET["datum"]) ? $_GET["datum"] : false;
@@ -236,7 +238,17 @@ function tu_was( $table_name, $gepostet, $conn) {
     $gepostete__felder["datum"         ] = $geparstes_datum;
     $gepostete__felder["i_saldo_datum" ] = $geparstes_datum;
   }
-  
+  // Plausibilitätsprüfung sanity check
+  foreach (array(
+    "arbzeit_plan_anfang", 
+    "arbzeit_plan_ende",
+    "arbeit_kommt",
+    "arbeit_geht"
+  ) as $val) {
+    if ("" == $gepostete__felder[$val]) {
+      echo "<strong>Fehlt $val</strong><br />\n";
+    }
+  }
   switch ($geposteter_auftrag) {
   case "UPDATE": $query = update_query( $table_name, $gepostete__felder, $gepostet->id()); break; 
   case "INSERT": $query = insert_query( $table_name, $gepostete__felder); break; 
@@ -280,9 +292,8 @@ $gepostet = new gepostet();
 
 $conn = new conn();
 
-$konstante = new konstante();
-$database_name = $konstante->database_name;
-$table_name    = $konstante->table_name   ;
+$database_name = konst::$database_name;
+$table_name    = konst::$table_name   ;
 
 öffne_connection_zur_database( $database_name, $table_name, $conn);
 tu_was( $table_name, $gepostet, $conn);

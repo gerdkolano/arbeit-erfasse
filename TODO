@@ -1,27 +1,34 @@
 DONE erledigt
 
+Button "Die Woche mit dem 1.Oktober" soll erzeugen "http://zoe.xeo/arbeit/erfasse/zeitkonto.php?verbose=1woche&wann=2016-10-01"
+"Die Woche mit dem 15.August" Zeigt die erste Augustwoche
+"Die Woche mit dem 9.August" zeigt die Vorwoche
+
+Button Feiertag
+
+verdiensterfasse.php E060 U010 Monatsname anzeigen
+
+Zwei Buttons Frei und Urlaub
+Urlaub bezahlte Dauer 5.55
+
+E060 U010 Wochentagsname anzeigen
+
 Ab-Bon -> Abrechnungs-Bon erledigt
 
 18.8 wird in der Monatsübersicht nicht gezeigt : Pausenzeit ist ohne Punkt angegeben 1150 statt 11.50 erledigt Daten korrigiert
 
 TODO
 
-Urlaub bezahlte Dauer 5.55
+Fahrgeld "Anzahl der Tage" "Betrag je Tag"
 
-Juli 2016 wird nicht vollständig angezeigt Monatsübersicht.
+Wenn ein Tag in der Datenbank fehlt, werden die folgenden Tage nicht angezeigt.
+
+Die Monatsübersicht Juli 2016 wird nicht vollständig angezeigt. Es fehlen Planung oder Komme-Gehe-Zeiten.
 
 Zeige Liste der Verdienstbescheinigungen.
 
-E060 U010 Wochentagsname anzeigen
-
-"Die Woche mit dem 9.August" zeigt die Vorwoche
-
-Arbeite mit ... Zwei Buttons Frei und Urlaub
-
 Tatsächlich Anfang Tatsächlich Ende als Pflichtfelder kennzeichnen
 freiwillige optionale Felder kennzeichnen
-
-"Die Woche mit dem 15.August" Zeigt die erste Augustwoche
 
 /daten/srv/www/htdocs/arbeit/tomasz-zimoch/tomasz-zimoch-za-kilkanascie-lat-andrzej-rzeplinski-bedzie-bohaterem-narodowym.html
 /daten/srv/www/htdocs/arbeit/erfasse/bahr.html

@@ -30,7 +30,14 @@ class zeile {
 }
 
 class tabelle {
-  public $felder, $kurzfelder, $kurzwahl, $minifelder, $miniwahl;
+  public
+    $kurzfelder,       $kurzwahl,
+    $minifelder,       $miniwahl,
+    $planungsfelder,   $planungswahl,
+    $feiertagsfelder,  $feiertagswahl,
+    $urlaubsfelder,    $urlaubswahl,
+    $freifelder,       $freiwahl,
+    $felder;
   public function get_muster( $column_name) {
   }
   function __construct() {
@@ -56,7 +63,7 @@ class tabelle {
     "retouren"             => (new zeile("w", "text"    , "Retouren"                   , "1"           , "Anzahl der Retouren" )),
     "nullbon"              => (new zeile("w", "text"    , "Nullbon"                    , "2"           , "Anzahl der Nullbons" )),
     "kunden"               => (new zeile("w", "text"    , "Kunden"                     , "250"         , "Anzahl der Kunden" )),
-    "abmeldung"            => (new zeile("w", "text"    , "Ab-Bon"                     , "21.05"       , "Kassiererin meldet sich ab. Kasse druckt Bon" )),
+    "abmeldung"            => (new zeile("w", "text"    , "Abrechnungs-Bon Zeit"       , "21.05"       , "Kassiererin meldet sich ab. Kasse druckt Bon" )),
     "einkaufdurchschnitt"  => (new zeile("w", "text"    , "D €"                        , "16.80"       , "€ Durchschnittlicher Einkauf" )),
     "ec_karte"             => (new zeile("w", "text"    , "EC €"                       , "2089.98"     , "€ EC-Karte" )),
     "ec_kunden"            => (new zeile("w", "text"    , "EC-Kunden"                  , "58"          , "Anzahl der EC-Zahlungen" )),
@@ -69,24 +76,24 @@ class tabelle {
     "leergut_sack2"        => (new zeile("w", "text"    , "Leergut 2. Sack"            , "0"           , "Sackanzahl und Flaschenanzahl Einzelflaschen" )),
     "leergut_anzahl"       => (new zeile("w", "text"    , "Leergut Anzahl"             , "555"         , "Anzahl der Leergut-Flaschen und -Dosen" )),
     "pfand"                => (new zeile("w", "text"    , "Pfand"                      , "148.25"      , "€ bedeutet??" )),
-    "pause1_geht"          => (new zeile("w", "text"    , "Geht in die 1.Pause"        , "16.17"       , "Eingabe ZEG Pause beginnt" )),
-    "pause1_kommt"         => (new zeile("w", "text"    , "Kommt aus der 1.Pause"      , "16.32"       , "Eingabe ZEG Pause endet" )),
-    "pause2_geht"          => (new zeile("w", "text"    , "Geht in die 2.Pause"        , "19.01"       , "Eingabe ZEG Pause beginnt" )),
-    "pause2_kommt"         => (new zeile("w", "text"    , "Kommt aus der 2.Pause"      , "19.16"       , "Eingabe ZEG Pause endet" )),
+    "pause1_geht"          => (new zeile("w", "text"    , "Geht in die 1.Pause"        , "16.17"       , "Pause beginnt ZEG erfasst" )),
+    "pause1_kommt"         => (new zeile("w", "text"    , "Kommt aus der 1.Pause"      , "16.32"       , "Pause endet ZEG erfasst" )),
+    "pause2_geht"          => (new zeile("w", "text"    , "Geht in die 2.Pause"        , "19.01"       , "Pause beginnt ZEG erfasst" )),
+    "pause2_kommt"         => (new zeile("w", "text"    , "Kommt aus der 2.Pause"      , "19.16"       , "Pause endet ZEG erfasst" )),
     "arbzeit_plan_dauer"   => (new zeile("w", $decimal  , "Bezahlte Dauer"             , "5.55"        , "Bezahlt krank, Feiertag, Seminar in h dezimal" )),
     "arbanf_autorisiert"   => (new zeile("w", "text"    , "Autorisierter Anfang"       , "6.14"        , "Verfrühter Beginn der Arbeit autorisiert" )),
     "arbende_autorisiert"  => (new zeile("w", "text"    , "Autorisiertes Ende"         , "21.22"       , "Verspätetes Ende der Arbeit autorisiert" )),
-    "arbzeit_plan_anfang"  => (new zeile("w", "text"    , "Geplanter Anfang"           , "12.45"       , "Geplante Arbeitszeit Anfangszeitpunkt" )),
-    "arbzeit_plan_ende"    => (new zeile("w", "text"    , "Geplantes Ende"             , "21.15"       , "Geplante Arbeitszeit Endzeitpunkt" )),
-    "arbeit_kommt"         => (new zeile("w", "text"    , "Tatsächlich Anfang"         , "12.45"       , "Eingabe ZEG Anfang des Einsatzes tatsächlich" )),
-    "arbeit_geht"          => (new zeile("w", "text"    , "Tatsächlich Ende"           , "21.10"       , "Eingabe ZEG Ende des Einsatzes tatsächlich" )),
+    "arbzeit_plan_anfang"  => (new zeile("w", "text"    , "Geplanter Anfang"           , "12.45"       , "Anfang der geplanten Arbeitszeit" )),
+    "arbzeit_plan_ende"    => (new zeile("w", "text"    , "Geplantes Ende"             , "21.15"       , "Ende der geplanten Arbeitszeit" )),
+    "arbeit_kommt"         => (new zeile("w", "text"    , "Tatsächlich Anfang"         , "12.45"       , "Arbeit beginnt ZEG erfasst" )),
+    "arbeit_geht"          => (new zeile("w", "text"    , "Tatsächlich Ende"           , "21.10"       , "Arbeit endet ZEG erfasst" )),
     "ang_zuschlag_25"      => (new zeile("w", $decimal  , "25% Mehrarbeit f. Angest."  , "0.89"        , "h 25% Angestellte" )),
     "spaetzuschlag_20"     => (new zeile("w", $decimal  , "20% Zuschlag Spätöffnung"   , "0.30"        , "h 20% Spätzuschlag von 18.30 bis 20.00 Uhr" )),
     "nachtzuschlag_50"     => (new zeile("w", $decimal  , "Nachtzuschlag 50%"          , "0.59"        , "h 50% Nachtzuschlag ab 20.00 Uhr" )),
     "saldo_zges_woche"     => (new zeile("w", "text"    , "Saldo ZGES wöchentlich"     , "23.02"       , "immer sonntags im Konto. Bedeutet??" )),
     "abschöpfung_bar"      => (new zeile("w", "text"    , "Abschöpfung Bar"            , "0.00 14.00"  , "€ Zeitpunkt Abschöpfung Bar" )),
     "abschöpfung_safebag"  => (new zeile("w", "text"    , "Abschöpfung Safebag"        , "0.00 15.00"  , "€ Zeitpunkt Abschöpfung Safebag" )),
-    "abschöpfung_piep"     => (new zeile("w", "text"    , "Abschöpfung Piep"           , "0.00 19.42"  , "€ Zeitpunkt Abschöpfung Piep" )),
+    "abschöpfung_piep"     => (new zeile("w", "text"    , "Abschöpfung Piep"           , "0.00 19.42"  ,   "Zeitpunkt Abschöpfung Piep" )),
     "kassensturz"          => (new zeile("w", "text"    , "Kassensturz"                , "0.00 15.00"  , "€ Zeitpunkt Betrag in der Kasse [hk]" )),
     "arbeitszeit"          => (new zeile("w", "text"    , "Arbeitszeit"                , "8.81"        , "Arbeitszeit in Stunden dezimal" )),
     "verlasse"             => (new zeile("w", "text"    , "verlasse"                   , "21.20"       , "Verlasse tatsächlich den Arbeitsplatz" )),
@@ -144,6 +151,34 @@ class tabelle {
     "bemerkung"            ,
     "aktualisiert"          
   );
+    $this->planungswahl = array (
+    "id"                   ,
+    "datum_auto"           ,
+    "datum"                ,
+    "arbzeit_plan_anfang"  ,
+    "arbzeit_plan_ende"    ,
+    "erscheine"            ,
+  );
+    $this->feiertagswahl = array (
+    "id"                   ,
+    "datum_auto"           ,
+    "datum"                ,
+    "arbzeit_plan_dauer"   ,
+    "erscheine"            ,
+  );
+    $this->urlaubswahl = array (
+    "id"                   ,
+    "datum_auto"           ,
+    "datum"                ,
+    "arbzeit_plan_dauer"   ,
+    "erscheine"            ,
+  );
+    $this->freiwahl = array (
+    "id"                   ,
+    "datum_auto"           ,
+    "datum"                ,
+    "erscheine"            ,
+  );
     $this->kurzwahl = array (
     "id"                   ,
     "datum_auto"           ,
@@ -173,6 +208,18 @@ class tabelle {
     }
     foreach ($this->kurzwahl as $wahl) {
       $this->kurzfelder[$wahl] = $this->felder[$wahl];
+    }
+    foreach ($this->planungswahl as $wahl) {
+      $this->planungsfelder[$wahl] = $this->felder[$wahl];
+    }
+    foreach ($this->feiertagswahl as $wahl) {
+      $this->feiertagsfelder[$wahl] = $this->felder[$wahl];
+    }
+    foreach ($this->urlaubswahl as $wahl) {
+      $this->urlaubsfelder[$wahl] = $this->felder[$wahl];
+    }
+    foreach ($this->freiwahl as $wahl) {
+      $this->freifelder[$wahl] = $this->felder[$wahl];
     }
   }
 }

@@ -1,5 +1,6 @@
 <?php
-require_once( "konstante.php");
+require_once( "../include/konst.php");
+require_once( "../include/datum.php");
 require_once( "connection.php");
 require_once( "parser.php");
 require_once( "verdiensttabelle.php");
@@ -46,7 +47,7 @@ function form_update( $spalte, $arg) {
   }
   $erg .= row_button( "UPDATE", "id-id" . $arg["id"], "Diesen Datensatz " . $arg["id"] . "  speichern");
   $erg = "<table class=\"update\">\n$erg</table>";
-  return sprintf( "<form method=\"POST\" action=\"%s\">\n%s\n</form>\n", (new konstante)->speicher_skript, $erg); // $erg kann "%" enthalten
+  return sprintf( "<form method=\"POST\" action=\"%s\">\n%s\n</form>\n", konst::$verdienst_speicher_skript, $erg); // $erg kann "%" enthalten
 }
 
 function form_insert( $spalte, $ein_datum) {
@@ -61,7 +62,7 @@ function form_insert( $spalte, $ein_datum) {
   $erg .= row_button( "INSERT", "gesandt-b", "Diesen neuen Datensatz speichern");
   //$erg .= "  <tr><td><button type=\"SUBMIT\" name=\"$submit_name\" value=\"$submit_inhalt\"> $submit_label </button>\n";
   $erg = "<table class=\"insert\">\n$erg</table>";
-  return sprintf( "<form method=\"POST\" action=\"%s\">\n%s\n</form>\n", (new konstante)->speicher_skript, $erg); // $erg kann "%" enthalten
+  return sprintf( "<form method=\"POST\" action=\"%s\">\n%s\n</form>\n", konst::$verdienst_speicher_skript, $erg); // $erg kann "%" enthalten
 }
 
 function verarbeite_id_datum_art( $eine_id, $ein_datum, $tafelart) {
@@ -79,10 +80,9 @@ function verarbeite_id_datum_art( $eine_id, $ein_datum, $tafelart) {
 }
 
 function erzeuge_ein_formular( $where, $ein_datum, $tafelart) {
-  $konst = new konstante;
   printf( "E060 where=\"%s\", ein_datum=\"%s\", tafelart=\"%s\"<br />\n", $where, $ein_datum, $tafelart);
-  $table_name = $konst->verdienst_tafel_name;
-  $database_name = $konst->database_name;
+  $table_name = konst::$verdienst_tafel_name;
+  $database_name = konst::$database_name;
 
   // Ist zu diesem Datum oder dieser Id in "where" ein Datensatz vorhanden ?
   $query = "SELECT id, datum FROM $table_name $where";
@@ -90,24 +90,27 @@ function erzeuge_ein_formular( $where, $ein_datum, $tafelart) {
   $erg = $conn->frage( 0, "USE $database_name");
   $schon_da = $conn->hol_array_of_objects( "$query", 0); // todo Fehlerbehandlung
   if ($schon_da) {                                                                                    // UPDATE
+    $deutsch = (new datum_objekt( $schon_da[0]["datum"]))->deutsch( "MMMM YYYY");
     printf("U010 Editiere id=\"%s\", datum=\"%s\"<br />\n", $schon_da[0]["id"], $schon_da[0]["datum"]);
   } else {                                                                                       // INSERT
+    $deutsch = $ein_datum == "" ? "" : (new datum_objekt( $ein_datum))->deutsch( "MMMM YYYY");
     printf("U020 Erzeuge mit datum=\"%s\", where=\"%s\" . Noch nicht im Datenbestand.<br />\n", $ein_datum, $where);
   }
+  printf( "<strong>%s</strong><br />\n", $deutsch);
   switch ($tafelart) {
-  case $konst->art_kurz :
+  case konst::$art_kurz :
     $tabelle = new tabelle;
     $spalte = $tabelle->kurzfelder;
     $comma_separated = implode(",", $tabelle->kurzwahl);
     $query = "SELECT $comma_separated  FROM $table_name $where";
     break;
-  case $konst->art_mini :
+  case konst::$art_mini :
     $tabelle = new tabelle;
     $spalte = $tabelle->minifelder;
     $comma_separated = implode(",", $tabelle->miniwahl);
     $query = "SELECT $comma_separated  FROM $table_name $where";
     break;
-  case $konst->art_lang :
+  case konst::$art_lang :
   default            :
     $spalte = (new tabelle())->felder;
     $query = "SELECT * FROM $table_name $where";
