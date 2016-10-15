@@ -6,7 +6,7 @@ require_once( "parser.php");
 require_once( "../include/datum.php");
 
 function head() {
-  $zuletzt_aktualisiert = "Erfassungsalgorithmus zuletzt aktualisiert: Mo 2016-10-03 17:52:57";
+  $zuletzt_aktualisiert = "Erfassungsalgorithmus zuletzt aktualisiert: Sa 2016-10-15 16:06:57";
   printf( "<!DOCTYPE html>\n");
   printf( "<html>\n");
   printf( "<head>\n");
@@ -234,9 +234,10 @@ function tu_was( $table_name, $gepostet, $conn) {
   $geparstes_datum =  geparstes_datum( $gepostete__felder["datum"]);
   if ($geparstes_datum) {
 #   printf( "S018 \"%s\" wird zu \"%s\" <br />\n", $gepostete__felder["datum_auto"], $geparstes_datum); 
-    $gepostete__felder["datum_auto"    ] = $geparstes_datum;
-    $gepostete__felder["datum"         ] = $geparstes_datum;
-    $gepostete__felder["i_saldo_datum" ] = $geparstes_datum;
+    $gepostete__felder["datum_auto"      ] = $geparstes_datum;
+    $gepostete__felder["datum"           ] = $geparstes_datum;
+    $gepostete__felder["i_arbzeit_datum" ] = $geparstes_datum;
+    $gepostete__felder["i_saldo_datum"   ] = $geparstes_datum;
   }
   // Plausibilitätsprüfung sanity check
   foreach (array(
@@ -246,7 +247,7 @@ function tu_was( $table_name, $gepostet, $conn) {
     "arbeit_geht"
   ) as $val) {
     if ("" == $gepostete__felder[$val]) {
-      echo "<strong>Fehlt $val</strong><br />\n";
+      echo "<strong>speichere: Fehlt $val</strong><br />\n";
     }
   }
   switch ($geposteter_auftrag) {
